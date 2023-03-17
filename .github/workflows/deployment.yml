@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   AWS_ACCOUNT_ID: "622696765016"
