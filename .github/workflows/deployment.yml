@@ -1,0 +1,35 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  AWS_ACCOUNT_ID: "622696765016"
+  AWS_ACCESS_KEY_ID: "AKIAZB646SZMKJ35BV7L"
+  AWS_SECRET_ACCESS_KEY: "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"
+  AWS_REGION: "ap-south-1"
+  ECR_REPOSITORY: "demo"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry: 622696765016.dkr.ecr.ap-south-1.amazonaws.com
+          aws-access-key-id: AKIAZB646SZMKJ35BV7L
+          aws-secret-access-key: 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
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: 622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo:${{ github.sha }}
