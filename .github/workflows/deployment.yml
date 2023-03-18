@@ -21,7 +21,7 @@ jobs:
       - name: Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
         with:
-          registry: 622696765016.dkr.ecr.ap-south-1.amazonaws.com
+          registry: 622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo
           registry-id: 622696765016
 
       - name: Build and push Docker image
