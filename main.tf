@@ -1,17 +1,7 @@
 provider "aws" {
   region     = "ap-south-1"
-  access_key = var.aws_access_key_id
-  secret_key = var.aws_secret_access_key
-}
-
-variable "aws_access_key_id" {
-  description = "AWS access key ID"
-  default     = "${{ secrets.AWS_ACCESS_KEY_ID }}"
-}
-
-variable "aws_secret_access_key" {
-  description = "AWS secret access key"
-  default     = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+  access_key = "AKIAZB646SZMKJ35BV7L"
+  secret_key = "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"
 }
 
 resource "aws_ecr_repository" "demo_app" {
