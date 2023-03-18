@@ -1,4 +1,4 @@
-name: Deploy to ecs
+name: Deploy to ECS
 
 on:
   push:
@@ -44,34 +44,32 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Build and Push Docker image
-        env:
-          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
-          IMAGE_TAG: ${{ github.sha }}
+      - name: Get latest image URI from ECR
+        id: get_latest_image
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
+          IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME}}:latest"
+          echo "::set-output name=image_uri::${IMAGE_URI}"
 
-      - name: Create or update ECS service
-        uses: marvinpinto/action-ecs-deploy@v0.2.2
-        with:
-          cluster: ${{ env.ECS_CLUSTER_NAME }}
-          service: ${{ env.ECS_SERVICE_NAME }}
-          task_definition: |
-            {
-              "family": "demo-app",
-              "containerDefinitions": [
-                {
-                  "name": "demo-app-container",
-                  "image": "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME }}:${{ github.sha }}",
-                  "essential": true,
-                  "portMappings": [
-                    {
-                      "containerPort": 3000
-                    }
-                  ]
-                }
-              ]
-            }
-          wait-for-service-stable: true
-          log-group-name: /ecs/${{ env.ECS_SERVICE_NAME }}
+      - name: Update ECS service with latest image
+        run: |
+          aws ecs update-service --cluster "${ECS_CLUSTER_NAME}" --service "${ECS_SERVICE_NAME}" --force-new-deployment --task-definition "{
+            \"containerDefinitions\": [
+              {
+                \"name\": \"my-container\",
+                \"image\": \"${{ steps.get_latest_image.outputs.image_uri }}\",
+                \"essential\": true,
+                \"portMappings\": [
+                  {
+                    \"containerPort\": 80,
+                    \"protocol\": \"tcp\"
+                  }
+                ]
+              }
+            ],
+            \"executionRoleArn\": \"arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecsTaskExecutionRole\",
+            \"family\": \"my-task-family\",
+            \"networkMode\": \"awsvpc\",
+            \"taskRoleArn\": \"arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/my-task-role\"
+          }"
+        wait-for-service-stable: true
+        log-group-name: /ecs/${{ env.ECS_SERVICE_NAME }}
