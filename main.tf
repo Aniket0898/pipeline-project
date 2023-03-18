@@ -9,6 +9,7 @@ data "aws_vpc" "demo_app" {
     name   = "tag:Name"
     values = ["demo_app"]
   }
+}
 
 resource "aws_ecr_repository" "demo_app" {
   name                 = "demo_app"
