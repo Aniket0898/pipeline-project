@@ -1,6 +1,10 @@
 {
   "name": "nodeapp",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aniket0898/pipeline-project"
+  },
   "description": "A simple Node.js application",
   "main": "index.js",
   "scripts": {
