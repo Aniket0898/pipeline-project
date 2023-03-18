@@ -1,3 +1,6 @@
+aws_access_key_id = "${{ secrets.AWS_ACCESS_KEY_ID }}"
+aws_secret_access_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+
 provider "aws" {
   region = "ap-south-1"
   access_key = var.aws_access_key_id
