@@ -9,6 +9,10 @@ data "aws_vpc" "demo_app" {
     name   = "tag:Name"
     values = ["demo_app"]
   }
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
 }
 
 resource "aws_ecr_repository" "demo_app" {
