@@ -1,7 +1,7 @@
 provider "aws" {
   region = "ap-south-1"
-  access_key = "AKIAZB646SZMKJ35BV7L"
-  secret_key = "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"
+  access_key = var.aws_access_key_id
+  secret_key = var.aws_secret_access_key
 }
 
 resource "aws_ecr_repository" "demo_app" {
@@ -29,6 +29,37 @@ resource "aws_ecs_task_definition" "demo_app" {
       protocol      = "tcp"
     }]
   }])
+}
+
+resource "aws_vpc" "demo_app" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "demo_app"
+  }
+}
+
+resource "aws_security_group" "demo_app" {
+  name_prefix = "demo_app_sg_"
+
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+variable "availability_zones" {
+  type    = list(string)
+  default = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
+}
+
+resource "aws_subnet" "demo_app" {
+  count = length(var.availability_zones)
+
+  cidr_block = "10.0.${count.index + 1}.0/24"
+  availability_zone = "${var.availability_zones[count.index]}"
+  vpc_id     = aws_vpc.demo_app.id
 }
 
 resource "aws_ecs_service" "demo_app" {
