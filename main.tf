@@ -5,10 +5,10 @@ provider "aws" {
 }
 
 data "aws_vpc" "demo_app" {
-  tags = {
-    Name = "demo_app"
+  filter {
+    name   = "tag:Name"
+    values = ["demo_app"]
   }
-}
 
 resource "aws_ecr_repository" "demo_app" {
   name                 = "demo_app"
