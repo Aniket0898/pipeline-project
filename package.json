@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node index.js"
   },
+  "license": "MIT",
   "keywords": [
     "node",
     "application"
