@@ -71,5 +71,3 @@ jobs:
             \"networkMode\": \"awsvpc\",
             \"taskRoleArn\": \"arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/my-task-role\"
           }"
-        wait-for-service-stable: true
-        log-group-name: /ecs/${{ env.ECS_SERVICE_NAME }}
