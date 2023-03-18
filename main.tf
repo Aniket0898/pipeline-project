@@ -7,7 +7,6 @@ provider "aws" {
 variable "aws_access_key_id" {}
 
 variable "aws_secret_access_key" {}
-}
 
 resource "aws_ecr_repository" "demo_app" {
   name                 = "demo_app"
