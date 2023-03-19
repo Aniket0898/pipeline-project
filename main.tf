@@ -93,10 +93,10 @@ resource "aws_iam_role_policy_attachment" "demo_app_task_execution_policy_attach
 
 resource "aws_ecs_task_definition" "demo_app" {
   family                   = "demo_app"
+  cpu                      = 256
   container_definitions    = jsonencode([{
     name  = "demo_app"
     image = aws_ecr_repository.demo_app.repository_url
-    cpu   = 256
     memory = 512
     essential = true
     portMappings = [{
