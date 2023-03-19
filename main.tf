@@ -108,10 +108,3 @@ resource "aws_ecs_task_definition" "demo_app" {
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
 }
-
-resource "aws_lb" "demo_app_lb" {
-  name               = "demo_app_lb"
-  internal           = false
-  load_balancer_type = "application"
-  subnets            = [aws_subnet.demo_app_subnet-public-1, aws_subnet.demo_app_subnet-public-2]
-}
