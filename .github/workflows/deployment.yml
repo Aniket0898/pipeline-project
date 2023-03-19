@@ -11,7 +11,6 @@ env:
   ECR_REPOSITORY_NAME: demo-app
   ECS_CLUSTER_NAME: demo-app
   ECS_SERVICE_NAME: demo-app-service
-  IMAGE_TAG: v1.0.0
 
 jobs:
   deploy:
@@ -53,21 +52,21 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build and push Docker image to ECR
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/{{ env.ECR_REPOSITORY_NAME}}:${{ env.IMAGE_TAG}}
+        id: build-image
         env:
-          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          ECR_TOKEN: ${{ steps.ecr-login.outputs.authorizationToken }}
-
+          ECR_REGISTRY: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG"
+          
       - name: Get latest image URI from ECR
         id: get_latest_image
         run: |
           IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME}}:latest"
           echo "::set-output name=image_uri::${IMAGE_URI}"
+          
       - name: Update ECS service with latest image
         run: |
           aws ecs update-service --cluster "${ECS_CLUSTER_NAME}" --service "${ECS_SERVICE_NAME}" --force-new-deployment --task-definition "{
