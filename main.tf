@@ -89,3 +89,5 @@ resource "aws_ecs_service" "demoapp" {
 
   load_balancer {
     target_group_arn = "${aws_lb_target_group.demoapp.arn}"
+  }
+}
