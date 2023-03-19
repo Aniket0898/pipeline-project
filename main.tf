@@ -4,32 +4,21 @@ provider "aws" {
   secret_key = "DAtijEOVADSqSARMJwHqx6DQdecQDG72gYWkaGD4"
 }
 
-resource "aws_vpc" "demoapp" {
+resource "aws_vpc" "demo_app" {
   cidr_block = "10.0.0.0/16"
+
   tags = {
-    Name = "demoapp-vpc"
+    Name = "demo_app-vpc"
   }
 }
 
-resource "aws_subnet" "demoapp_public_1" {
-  vpc_id     = "${aws_vpc.demoapp.id}"
-  cidr_block = "10.0.1.0/24"
-  availability_zone = "us-west-2a"
-}
-
-resource "aws_subnet" "demoapp_public_2" {
-  vpc_id     = "${aws_vpc.demoapp.id}"
-  cidr_block = "10.0.2.0/24"
-  availability_zone = "us-west-2b"
-}
-
-resource "aws_security_group" "ecs_tasks" {
-  name_prefix = "ecs-tasks-"
-  vpc_id      = "${aws_vpc.demoapp.id}"
+resource "aws_security_group" "demo_app" {
+  name_prefix = "demo_app-"
+  vpc_id      = aws_vpc.demo_app.id
 
   ingress {
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 0
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["10.0.0.0/8"]
   }
@@ -42,52 +31,86 @@ resource "aws_security_group" "ecs_tasks" {
   }
 }
 
-resource "aws_ecr_repository" "demoapp" {
-  name = "demoapp"
+resource "aws_subnet" "demo_app-public-1" {
+  vpc_id            = aws_vpc.demo_app.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-west-2a"
 }
 
-resource "aws_ecs_task_definition" "demoapp" {
-  family                   = "demoapp"
-  container_definitions    = <<DEFINITION
-  [
-    {
-      "name": "demoapp",
-      "image": "${aws_ecr_repository.demoapp.repository_url}",
-      "cpu": 256,
-      "memory": 512,
-      "essential": true,
-      "portMappings": [
-        {
-          "containerPort": 3000,
-          "hostPort": 3000
+resource "aws_subnet" "demo_app-public-2" {
+  vpc_id            = aws_vpc.demo_app.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "us-west-2b"
+}
+
+resource "aws_ecr_repository" "demo_app" {
+  name = "demo_app"
+}
+
+resource "aws_ecs_cluster" "demo_app" {
+  name = "demo_app"
+}
+
+resource "aws_iam_role" "demo_app_task_execution_role" {
+  name = "demo_app-task-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
         }
-      ]
-    }
-  ]
-  DEFINITION
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "demo_app_task_execution_policy" {
+  name = "demo_app-task-execution-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "demo_app_task_execution_policy_attachment" {
+  policy_arn = aws_iam_policy.demo_app_task_execution_policy.arn
+  role       = aws_iam_role.demo_app_task_execution_role.name
+}
+
+resource "aws_ecs_task_definition" "demo_app" {
+  family                   = "demo_app"
+  container_definitions    = jsonencode([{
+    name  = "demo_app"
+    image = aws_ecr_repository.demo_app.repository_url
+    cpu   = 256
+    memory = 512
+    essential = true
+    portMappings = [{
+      containerPort = 3000
+      hostPort = 3000
+    }]
+  }])
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
+  execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
 }
 
-
-resource "aws_ecs_cluster" "demoapp" {
-  name = "demoapp"
-}
-
-resource "aws_ecs_service" "demoapp" {
-  name            = "demoapp"
-  cluster         = "${aws_ecs_cluster.demoapp.id}"
-  task_definition = "${aws_ecs_task_definition.demoapp.arn}"
-  desired_count   = 1
-  launch_type     = "FARGATE"
-
-  network_configuration {
-    subnets          = ["${aws_subnet.demoapp_public_1.id}", "${aws_subnet.demoapp_public_2.id}"]
-    security_groups  = ["${aws_security_group.ecs_tasks.id}"]
-    assign_public_ip = "ENABLED"
-  }
-
-  load_balancer {
-    target_group_arn = "${aws_lb_target_group.demoapp.arn}"
-  }
-}
+resource "aws_lb" "demo_app" {
+  name               = "demo_app-lb"
+  internal           = false
+  load_balancer_type = "application"
+  subnets            = [aws_subnet.demo_app
