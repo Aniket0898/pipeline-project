@@ -34,13 +34,13 @@ resource "aws_security_group" "demo_app" {
 resource "aws_subnet" "demo_app-public-1" {
   vpc_id            = aws_vpc.demo_app.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-west-2a"
+  availability_zone = "ap-south-1a"
 }
 
 resource "aws_subnet" "demo_app-public-2" {
   vpc_id            = aws_vpc.demo_app.id
   cidr_block        = "10.0.2.0/24"
-  availability_zone = "us-west-2b"
+  availability_zone = "ap-south-1b"
 }
 
 resource "aws_ecr_repository" "demo_app" {
