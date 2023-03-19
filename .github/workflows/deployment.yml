@@ -8,7 +8,6 @@ on:
 env:
   TF_BACKEND_BUCKET: my-terraform-state-bucket
   TF_BACKEND_KEY: my-terraform-state-key
-  AWS_REGION: ap-south-1
   ECR_REPOSITORY_NAME: demo-app
   ECS_CLUSTER_NAME: demo-app
   ECS_SERVICE_NAME: demo-app-service
@@ -27,7 +26,7 @@ jobs:
           backend-config: |
             bucket = "${{ env.TF_BACKEND_BUCKET }}"
             key    = "${{ env.TF_BACKEND_KEY }}"
-            region = "${{ env.AWS_REGION }}"
+            region = "${{ secrets.AWS_REGION }}"
       - name: Terraform Init
         run: terraform init
 
@@ -43,7 +42,7 @@ jobs:
 
       - name: Login to ECR
         id: ecr-login
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -58,12 +57,11 @@ jobs:
           ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           AWS_REGION: ${{ secrets.AWS_REGION }}
           ECR_TOKEN: ${{ steps.ecr-login.outputs.authorizationToken }}
-          ECR_REPOSITORY: "demo_app"
 
       - name: Get latest image URI from ECR
         id: get_latest_image
         run: |
-          IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME}}:latest"
+          IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME}}:latest"
           echo "::set-output name=image_uri::${IMAGE_URI}"
       - name: Update ECS service with latest image
         run: |
