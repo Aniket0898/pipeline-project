@@ -11,6 +11,7 @@ env:
   ECR_REPOSITORY_NAME: demo-app
   ECS_CLUSTER_NAME: demo-app
   ECS_SERVICE_NAME: demo-app-service
+  IMAGE_TAG: v1.0.0
 
 jobs:
   deploy:
@@ -56,7 +57,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/{{ env.ECR_REPOSITORY_NAME}}:latest
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/{{ env.ECR_REPOSITORY_NAME}}:${{ env.IMAGE_TAG}}
         env:
           ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           AWS_REGION: ${{ secrets.AWS_REGION }}
