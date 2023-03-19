@@ -113,5 +113,5 @@ resource "aws_lb" "demo_app_lb" {
   name               = "demo_app_lb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [aws_subnet.demo_app_subnet-public-1.id, aws_subnet.demo_app_subnet-public-2.id]
+  subnets            = [aws_subnet.demo_app_subnet-public-1, aws_subnet.demo_app_subnet-public-2]
 }
