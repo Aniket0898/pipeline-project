@@ -20,8 +20,8 @@
       }
     ],
     "family": "demo_app",
-    "taskRoleArn": "arn:aws:iam::***:role/demo_app_task_execution_role",
-    "executionRoleArn": "arn:aws:iam::***:role/demo_app_task_execution_role",
+    "taskRoleArn": "arn:aws:iam::***:role/demo_app-task-execution-role",
+    "executionRoleArn": "arn:aws:iam::***:role/demo_app-task-execution-role",
     "networkMode": "awsvpc",
     "volumes": [],
     "status": "ACTIVE",
