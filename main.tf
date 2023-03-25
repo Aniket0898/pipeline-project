@@ -75,12 +75,26 @@ resource "aws_iam_policy" "demo_app_task_execution_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = [
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-          "ecs:*",
-          "ecr:*"
+         Effect = "Allow",
+          Action = [
+            "ecr:GetAuthorizationToken",
+            "ecr:BatchCheckLayerAvailability",
+            "ecr:GetDownloadUrlForLayer",
+            "ecr:GetRepositoryPolicy",
+            "ecr:DescribeRepositories",
+            "ecr:ListImages",
+            "ecr:DescribeImages",
+            "ecr:BatchGetImage",
+            "ecs:RegisterTaskDefinition",
+            "ecs:DeregisterTaskDefinition",
+            "ecs:DescribeTaskDefinition",
+            "ecs:ListTaskDefinitions",
+            "ecs:UpdateService",
+            "ecs:DescribeServices",
+            "ecs:ListServices",
+            "ecs:DescribeClusters",
+            "ecs:ListClusters"
+          ],
         ]
         Resource = "*"
       }
@@ -108,5 +122,6 @@ resource "aws_ecs_task_definition" "taskdefinition" {
   }])
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
+  execution_role_arn       = "arn:aws:iam::622696765016:role/demo_app-task-execution-role"
+  task_role_arn            = "arn:aws:iam::622696765016:role/demo_app-task-execution-role"
 }
