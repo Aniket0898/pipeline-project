@@ -93,7 +93,7 @@ resource "aws_iam_role_policy_attachment" "demo_app_task_execution_policy_attach
   role       = aws_iam_role.demo_app_task_execution_role.id
 }
 
-resource "aws_ecs_task_definition" "demo_app" {
+resource "aws_ecs_task_definition" "taskdefinition" {
   family                   = "demo_app"
   cpu                      = 256
   memory = 512
