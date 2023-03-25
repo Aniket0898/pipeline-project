@@ -95,7 +95,6 @@ resource "aws_iam_policy" "demo_app_task_execution_policy" {
             "ecs:DescribeClusters",
             "ecs:ListClusters"
           ],
-        ]
         Resource = "*"
       }
     ]
