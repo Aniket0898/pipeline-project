@@ -19,7 +19,7 @@
         "volumesFrom": []
       }
     ],
-    "family": "app",
+    "family": "demo_app",
     "taskRoleArn": "arn:aws:iam::***:role/demo_app_task_execution_role",
     "executionRoleArn": "arn:aws:iam::***:role/demo_app_task_execution_role",
     "networkMode": "awsvpc",
@@ -44,7 +44,6 @@
     ],
     "placementConstraints": [],
     "compatibilities": [
-      "EC2",
       "FARGATE"
     ],
     "requiresCompatibilities": [
