@@ -1,5 +1,5 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-2:***:task-definition/app",
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:***:task-definition/demo_app",
     "containerDefinitions": [
       {
         "name": "demo_container",
