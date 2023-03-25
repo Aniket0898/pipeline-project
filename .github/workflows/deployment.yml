@@ -76,7 +76,7 @@ jobs:
           container-name: ${{ env.CONTAINER_NAME }}
           image: get_latest_image t
       - name: Replace AWS_ACCOUNT_ID in task definition
-        run: sed -i "s/\\*\\*\\*/${{ env.AWS_ACCOUNT_ID }}/g" taskdefinition.json
+        run: sed -i "s/\\*\\*\\*/${{ env.AWS_ACCOUNT_ID }}/g" .github/workflows/taskdefinition.json
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
