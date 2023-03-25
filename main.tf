@@ -90,7 +90,7 @@ resource "aws_iam_policy" "demo_app_task_execution_policy" {
 
 resource "aws_iam_role_policy_attachment" "demo_app_task_execution_policy_attachment" {
   policy_arn = aws_iam_policy.demo_app_task_execution_policy.arn
-  role       = aws_iam_role.demo_app_task_execution_role.name
+  role       = aws_iam_role.demo_app_task_execution_role.id
 }
 
 resource "aws_ecs_task_definition" "demo_app" {
