@@ -11,7 +11,7 @@ env:
   ECR_REPOSITORY_NAME: demo-app
   ECS_CLUSTER_NAME: demo-app
   ECS_SERVICE_NAME: demo-app-service
-  ECS_TD: .github/workflows/Taskdefinition.json
+  ECS_TD: .github/workflows/taskdefinition.json
   CONTAINER_NAME: demo_container
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
