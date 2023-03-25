@@ -78,7 +78,7 @@ resource "aws_iam_policy" "demo_app_task_execution_policy" {
         Effect   = "Allow"
         Action   = [
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
           "ecs:RegisterTaskDefinition",
           "ecs:UpdateService"
         ]
