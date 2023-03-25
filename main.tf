@@ -79,8 +79,8 @@ resource "aws_iam_policy" "demo_app_task_execution_policy" {
         Action   = [
           "logs:CreateLogStream",
           "logs:PutLogEvents",
-          "ecs:RegisterTaskDefinition",
-          "ecs:UpdateService"
+          "ecs:*",
+          "ecr:*"
         ]
         Resource = "*"
       }
