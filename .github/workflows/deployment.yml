@@ -74,7 +74,8 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TD }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: get_latest_image t
+          image: ${{ steps.build-image.outputs.image_uri }}
+          
       - name: Replace AWS_ACCOUNT_ID in task definition
         run: sed -i "s/\\*\\*\\*/${{ env.AWS_ACCOUNT_ID }}/g" .github/workflows/taskdefinition.json
 
