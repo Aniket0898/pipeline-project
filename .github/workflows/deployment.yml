@@ -55,38 +55,31 @@ jobs:
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push Docker image
+      - name: Replace AWS_ACCOUNT_ID in task definition
+        run: sed -i "s/\\*\\*\\*/${{ env.AWS_ACCOUNT_ID }}/g" .github/workflows/taskdefinition.json
+        
+      - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: "${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com"
-        uses: docker/build-push-action@v2 
-        with:
-          context: .
-          push: true
-          tags: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/demo_app:${{ github.sha }}
-          
-      - name: Get latest image URI from ECR
-        id: get_latest_image
+          IMAGE_TAG: latest
         run: |
-          IMAGE_URI="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME}}:${{ github.sha }}"
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NAME:${{ github.sha }}""
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG"
           
       - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
+        id: task-def-1
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ env.ECS_TD }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NAME:${{ github.sha }}"
-          
-      - name: Replace AWS_ACCOUNT_ID in task definition
-        run: sed -i "s/\\*\\*\\*/${{ env.AWS_ACCOUNT_ID }}/g" .github/workflows/taskdefinition.json
-        
+          image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.register-task.outputs.task-definition-arn }}
+          task-definition: ${{ steps.task-def-1.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE_NAME }}
           cluster: ${{ env.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
