@@ -13,7 +13,7 @@ resource "aws_vpc" "demo_app" {
 }
 
 resource "aws_security_group" "demo_app" {
-  name_prefix = "demo_app-"
+  name_prefix = "demo_app"
   vpc_id      = aws_vpc.demo_app.id
 
   ingress {
@@ -64,7 +64,7 @@ resource "aws_ecs_service" "service" {
 
   network_configuration {
     assign_public_ip = true
-    security_groups  = [aws_security_group.sg.id]
+    security_groups  = [aws_security_group.demo_app.id]
     subnets          = [aws_subnet.demo_app-public-1.id, aws_subnet.demo_app-public-2.id]
   }
 }
