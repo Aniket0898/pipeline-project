@@ -66,16 +66,14 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
       }
     ]
   })
-}
 
-resource "aws_iam_policy" "demo_app_task_execution_policy" {
-  name = "demo_app-task-execution-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-         Effect = "Allow",
+  inline_policy {
+    name = "ecs-task-permissions"
+    policy = jsonencode({
+      Version = "2012-10-17",
+      Statement = [
+        {
+          Effect = "Allow",
           Action = [
             "ecr:GetAuthorizationToken",
             "ecr:BatchCheckLayerAvailability",
@@ -95,32 +93,14 @@ resource "aws_iam_policy" "demo_app_task_execution_policy" {
             "ecs:DescribeClusters",
             "ecs:ListClusters"
           ],
-        Resource = "*"
-      }
-    ]
-  })
+          Resource = "*"
+        }
+      ]
+    })
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "demo_app_task_execution_policy_attachment" {
   policy_arn = aws_iam_policy.demo_app_task_execution_policy.arn
   role       = aws_iam_role.demo_app_task_execution_role.id
-}
-
-resource "aws_ecs_task_definition" "taskdefinition" {
-  family                   = "demo_app"
-  cpu                      = 256
-  memory = 512
-  container_definitions    = jsonencode([{
-    name  = "demo_app"
-    image = aws_ecr_repository.demo_app.repository_url
-    essential = true
-    portMappings = [{
-      containerPort = 3000
-      hostPort = 3000
-    }]
-  }])
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  execution_role_arn       = "arn:aws:iam::622696765016:role/demo_app-task-execution-role"
-  task_role_arn            = "arn:aws:iam::622696765016:role/demo_app-task-execution-role"
 }
