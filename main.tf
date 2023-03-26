@@ -50,6 +50,24 @@ resource "aws_ecr_repository" "demo_app" {
 resource "aws_ecs_cluster" "demo_app" {
   name = "demo_app"
 }
+resource "aws_ecs_service" "service" {
+  name = "app_service"
+  cluster                = aws_ecs_cluster.ecs.arn
+  launch_type            = "FARGATE"
+  enable_execute_command = true
+
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = 100
+  desired_count                      = 1
+  task_definition                    = aws_ecs_task_definition.taskdefinition.arn
+
+  network_configuration {
+    assign_public_ip = true
+    security_groups  = [aws_security_group.sg.id]
+    subnets          = [aws_subnet.demo_app-public-1.id, aws_subnet.demo_app-public-2.id]
+  }
+}
+
 
 resource "aws_iam_role" "demo_app_task_execution_role" {
   name = "demo_app-task-execution-role"
