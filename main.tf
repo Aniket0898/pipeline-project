@@ -119,23 +119,8 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
         {
           Effect = "Allow",
           Action = [
-            "ecr:GetAuthorizationToken",
-            "ecr:BatchCheckLayerAvailability",
-            "ecr:GetDownloadUrlForLayer",
-            "ecr:GetRepositoryPolicy",
-            "ecr:DescribeRepositories",
-            "ecr:ListImages",
-            "ecr:DescribeImages",
-            "ecr:BatchGetImage",
-            "ecs:RegisterTaskDefinition",
-            "ecs:DeregisterTaskDefinition",
-            "ecs:DescribeTaskDefinition",
-            "ecs:ListTaskDefinitions",
-            "ecs:UpdateService",
-            "ecs:DescribeServices",
-            "ecs:ListServices",
-            "ecs:DescribeClusters",
-            "ecs:ListClusters"
+            "ecr:*",
+            "ecs:*"
           ],
           Resource = "*"
         }
