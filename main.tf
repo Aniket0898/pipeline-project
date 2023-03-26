@@ -99,8 +99,3 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
     })
   }
 }
-
-resource "aws_iam_role_policy_attachment" "demo_app_task_execution_policy_attachment" {
-  policy_arn = aws_iam_policy.demo_app_task_execution_policy.arn
-  role       = aws_iam_role.demo_app_task_execution_role.id
-}
