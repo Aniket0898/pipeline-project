@@ -78,11 +78,19 @@ jobs:
           
       - name: Replace AWS_ACCOUNT_ID in task definition
         run: sed -i "s/\\*\\*\\*/${{ env.AWS_ACCOUNT_ID }}/g" .github/workflows/taskdefinition.json
+        
+      - name: Register task definition
+        id: register-task
+        uses: aws-actions/amazon-ecs-register-task-definition@v1
+        with:
+          family: taskdefinition
+          container-name: ${{ env.CONTAINER_NAME }}
+          container-image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: aws_ecs_task_definition.taskdefinition.arn
+          task-definition: ${{ steps.register-task.outputs.task-definition-arn }}
           service: ${{ env.ECS_SERVICE_NAME }}
           cluster: ${{ env.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
