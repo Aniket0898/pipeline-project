@@ -50,9 +50,10 @@ resource "aws_ecr_repository" "demo_app" {
 resource "aws_ecs_cluster" "demo_app" {
   name = "demo_app"
 }
+
 resource "aws_ecs_service" "service" {
   name = "app_service"
-  cluster                = aws_ecs_cluster.ecs.arn
+  cluster                = demo_app.ecs.arn
   launch_type            = "FARGATE"
   enable_execute_command = true
 
@@ -68,6 +69,31 @@ resource "aws_ecs_service" "service" {
   }
 }
 
+resource "aws_ecs_task_definition" "taskdefinition" {
+    container_definitions = jsonencode([
+      {
+        name         = "demo_app"
+        image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_app"
+        cpu          = 256
+        memory       = 512
+        essential    = true
+        portMappings = [
+          {
+            containerPort = 3000
+            hostPort      = 3000
+          }
+        ]
+      }
+    ])
+    family                   = "demo_app"
+    requires_compatibilities = ["FARGATE"]
+  
+    cpu                      = "256"
+    memory                   = "512"
+    network_mode             = "awsvpc"
+    execution_role_arn       = "arn:aws:iam::622696765016:role/demo_app-task-execution-role"
+    task_role_arn            = "arn:aws:iam::622696765016:role/demo_app-task-execution-role"
+  }
 
 resource "aws_iam_role" "demo_app_task_execution_role" {
   name = "demo_app-task-execution-role"
