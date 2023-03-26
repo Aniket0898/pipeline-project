@@ -53,7 +53,7 @@ resource "aws_ecs_cluster" "demo_app" {
 
 resource "aws_ecs_service" "service" {
   name = "app_service"
-  cluster                = demo_app.ecs.arn
+  cluster                = aws_ecs_cluster.demo_app.arn
   launch_type            = "FARGATE"
   enable_execute_command = true
 
