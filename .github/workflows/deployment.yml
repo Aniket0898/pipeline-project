@@ -69,7 +69,7 @@ jobs:
         id: get_latest_image
         run: |
           IMAGE_URI="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME}}:${{ github.sha }}"
-          echo "::set-output "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NAME:${{ github.sha }}""
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NAME:${{ github.sha }}""
           
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
