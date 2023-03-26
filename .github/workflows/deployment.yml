@@ -14,6 +14,8 @@ env:
   ECS_TD: .github/workflows/taskdefinition.json
   CONTAINER_NAME: demo_container
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  ECR_REGISTRY: "${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com"
+  IMAGE_TAG: latest
 
 jobs:
   deploy:
@@ -66,7 +68,7 @@ jobs:
         id: get_latest_image
         run: |
           IMAGE_URI="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME}}:${{ github.sha }}"
-          echo "::set-output "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG""
+          echo "::set-output "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NAME:${{ github.sha }}""
           
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -74,7 +76,7 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TD }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          image: "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NAME:${{ github.sha }}"
           
       - name: Replace AWS_ACCOUNT_ID in task definition
         run: sed -i "s/\\*\\*\\*/${{ env.AWS_ACCOUNT_ID }}/g" .github/workflows/taskdefinition.json
