@@ -72,7 +72,7 @@ resource "aws_ecs_service" "service" {
 resource "aws_ecs_task_definition" "taskdefinition" {
     container_definitions = jsonencode([
       {
-        name         = "demo_app"
+        name         = "taskdefinition"
         image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_app"
         cpu          = 256
         memory       = 512
