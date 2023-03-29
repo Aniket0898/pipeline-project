@@ -3,7 +3,7 @@
     "containerDefinitions": [
       {
         "name": "demo_container",
-        "image": "***.dkr.ecr.ap-south-1.amazonaws.com/demo-app",
+        "image": "***.dkr.ecr.ap-south-1.amazonaws.com/demo_app",
         "cpu": 256,
         "memory": 512,
         "portMappings": [
