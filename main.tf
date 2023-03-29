@@ -4,7 +4,6 @@ provider "aws" {
   secret_key = "DAtijEOVADSqSARMJwHqx6DQdecQDG72gYWkaGD4"
 }
 
-
 resource "aws_vpc" "demo_app" {
   cidr_block = "10.0.0.0/16"
 
