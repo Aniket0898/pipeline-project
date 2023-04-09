@@ -44,7 +44,7 @@ resource "aws_subnet" "demo_app-public-2" {
 }
 
 resource "aws_ecr_repository" "demo_repo" {
-  name = "demo_app"
+  name = "demo_repo"
 }
 
 resource "aws_ecs_cluster" "demo_app" {
@@ -52,7 +52,7 @@ resource "aws_ecs_cluster" "demo_app" {
 }
 
 resource "aws_ecs_service" "service" {
-  name = "app_service"
+  name = "demo_service"
   cluster                = aws_ecs_cluster.demo_app.arn
   launch_type            = "FARGATE"
   enable_execute_command = true
@@ -85,7 +85,7 @@ resource "aws_ecs_task_definition" "taskdefinition" {
         ]
       }
     ])
-    family                   = "demo_app"
+    family                   = "taskdefinition"
     requires_compatibilities = ["FARGATE"]
   
     cpu                      = "256"
