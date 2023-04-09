@@ -43,7 +43,7 @@ resource "aws_subnet" "demo_app-public-2" {
   availability_zone = "ap-south-1b"
 }
 
-resource "aws_ecr_repository" "demo_app" {
+resource "aws_ecr_repository" "demo_repo" {
   name = "demo_app"
 }
 
@@ -73,7 +73,7 @@ resource "aws_ecs_task_definition" "taskdefinition" {
     container_definitions = jsonencode([
       {
         name         = "taskdefinition"
-        image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_app"
+        image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_repo"
         cpu          = 256
         memory       = 512
         essential    = true
