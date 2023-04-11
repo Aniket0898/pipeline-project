@@ -1,16 +1,15 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:***:task-definition/taskdefinition",
-    container_definitions = jsonencode([
+    "taskDefinitionArn": "arn:aws:ecs:us-east-2:***:task-definition/app",
+    "containerDefinitions": [
       {
-        name         = "taskdefinition"
-        image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_repo"
-        cpu          = 256
-        memory       = 512
-        essential    = true
-        portMappings = [
+        "name": "demo_container",
+        "image": "***.dkr.ecr.us-east-2.amazonaws.com/app_repo",
+        "cpu": 256,
+        "memory": 512,
+        "portMappings": [
           {
-            containerPort = 3000
-            hostPort      = 3000
+            "containerPort": 3000,
+            "hostPort": 3000,
             "protocol": "tcp"
           }
         ],
@@ -20,9 +19,9 @@
         "volumesFrom": []
       }
     ],
-    "family": "taskdefinition",
-    "taskRoleArn": "arn:aws:iam::***:role/demo_app-task-execution-role",
-    "executionRoleArn": "arn:aws:iam::***:role/demo_app-task-execution-role",
+    "family": "app",
+    "taskRoleArn": "arn:aws:iam::***:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::***:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
     "volumes": [],
     "status": "ACTIVE",
@@ -45,13 +44,14 @@
     ],
     "placementConstraints": [],
     "compatibilities": [
+      "EC2",
       "FARGATE"
     ],
     "requiresCompatibilities": [
       "FARGATE"
     ],
-    "cpu": "256",
-    "memory": "512",
+    "cpu": "500",
+    "memory": "1000",
     "registeredBy": "arn:aws:iam::***:user/Demo-User"
-  } 
+  }
   
