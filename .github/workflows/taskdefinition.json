@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-2:***:task-definition/app",
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:***:task-definition/app",
     "containerDefinitions": [
       {
         "name": "demo_container",
-        "image": "***.dkr.ecr.us-east-2.amazonaws.com/app_repo",
+        "image": "***.dkr.ecr.ap-south-1.amazonaws.com/app_repo",
         "cpu": 512,
         "memory": 1024,
         "portMappings": [
