@@ -72,7 +72,7 @@ resource "aws_ecs_service" "service" {
 resource "aws_ecs_task_definition" "taskdefinition" {
     container_definitions = jsonencode([
       {
-        name         = "taskdefinition"
+        name         = "demo_container"
         image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_repo"
         cpu          = 512
         memory       = 1024
@@ -85,7 +85,7 @@ resource "aws_ecs_task_definition" "taskdefinition" {
         ]
       }
     ])
-    family                   = "taskdefinition"
+    family                   = "demo_container"
     requires_compatibilities = ["FARGATE"]
   
     cpu                      = "512"
