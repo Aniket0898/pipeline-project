@@ -19,7 +19,7 @@
         "volumesFrom": []
       }
     ],
-    "family": "app",
+    "family": "demo_container",
     "taskRoleArn": "arn:aws:iam::***:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::***:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
