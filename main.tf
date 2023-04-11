@@ -74,8 +74,8 @@ resource "aws_ecs_task_definition" "taskdefinition" {
       {
         name         = "taskdefinition"
         image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_repo"
-        cpu          = 500
-        memory       = 1000
+        cpu          = 512
+        memory       = 1 GB
         essential    = true
         portMappings = [
           {
