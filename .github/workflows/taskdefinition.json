@@ -4,8 +4,8 @@
       {
         "name": "demo_container",
         "image": "***.dkr.ecr.us-east-2.amazonaws.com/app_repo",
-        "cpu": 500,
-        "memory": 1000,
+        "cpu": 512,
+        "memory": 1024,
         "portMappings": [
           {
             "containerPort": 3000,
@@ -50,8 +50,8 @@
     "requiresCompatibilities": [
       "FARGATE"
     ],
-    "cpu": "500",
-    "memory": "1000",
+    "cpu": "512",
+    "memory": "1024",
     "registeredBy": "arn:aws:iam::***:user/Demo-User"
   }
   
