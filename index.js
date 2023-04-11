@@ -1,15 +1,9 @@
-'use strict'
+const express = require('express');
 
-var express = require('express');
+const app = express();
 
-var app = module.exports = express()
-
-app.get('/', function(req, res){
-  res.send('Hello World');
+app.get('/', function (req, res){
+    res.send("Hello World 2");
 });
 
-/* istanbul ignore next */
-if (!module.parent) {
-  app.listen(3000);
-  console.log('Express started on port 3000');
-}
+app.listen(80);
