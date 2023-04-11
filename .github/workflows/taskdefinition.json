@@ -53,5 +53,5 @@
     "cpu": "256",
     "memory": "512",
     "registeredBy": "arn:aws:iam::***:user/Demo-User"
-  }
+  } 
   
