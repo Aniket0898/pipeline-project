@@ -1,15 +1,16 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:***:task-definition/demo_container",
-    "containerDefinitions": [
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:***:task-definition/taskdefinition",
+    container_definitions = jsonencode([
       {
-        "name": "demo_container",
-        "image": "***.dkr.ecr.ap-south-1.amazonaws.com/demo_repo",
-        "cpu": 256,
-        "memory": 512,
-        "portMappings": [
+        name         = "taskdefinition"
+        image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_repo"
+        cpu          = 256
+        memory       = 512
+        essential    = true
+        portMappings = [
           {
-            "containerPort": 3000,
-            "hostPort": 3000,
+            containerPort = 3000
+            hostPort      = 3000
             "protocol": "tcp"
           }
         ],
@@ -19,7 +20,7 @@
         "volumesFrom": []
       }
     ],
-    "family": "demo_container",
+    "family": "taskdefinition",
     "taskRoleArn": "arn:aws:iam::***:role/demo_app-task-execution-role",
     "executionRoleArn": "arn:aws:iam::***:role/demo_app-task-execution-role",
     "networkMode": "awsvpc",
