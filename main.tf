@@ -74,8 +74,8 @@ resource "aws_ecs_task_definition" "taskdefinition" {
       {
         name         = "demo_container"
         image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_repo"
-        cpu          = 512
-        memory       = 1024
+        cpu          = 1024
+        memory       = 3072
         essential    = true
         portMappings = [
           {
@@ -88,8 +88,8 @@ resource "aws_ecs_task_definition" "taskdefinition" {
     family                   = "demo_container"
     requires_compatibilities = ["FARGATE"]
   
-    cpu                      = "512"
-    memory                   = "1024"
+    cpu                      = "1024"
+    memory                   = "3072"
     network_mode             = "awsvpc"
     execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
     task_role_arn            = aws_iam_role.demo_app_task_execution_role.arn
