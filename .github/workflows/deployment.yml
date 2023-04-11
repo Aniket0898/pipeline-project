@@ -8,9 +8,9 @@ on:
 env:
   TF_BACKEND_BUCKET: my-terraform-state-bucket
   TF_BACKEND_KEY: my-terraform-state-key
-  ECR_REPOSITORY_NAME: demo_repo
+  ECR_REPOSITORY_NAME: demo_app
   ECS_CLUSTER_NAME: demo_app
-  ECS_SERVICE_NAME: demo_service
+  ECS_SERVICE_NAME: app_service
   ECS_TD: .github/workflows/taskdefinition.json
   CONTAINER_NAME: demo_container
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
