@@ -43,6 +43,14 @@ resource "aws_subnet" "demo_app-public-2" {
   availability_zone = "ap-south-1b"
 }
 
+resource "aws_cloudwatch_log_group" "ecs_logs" {
+  name = "ecs_logs"
+
+  tags = {
+    Name = "ecs_logs"
+  }
+} 
+
 resource "aws_ecr_repository" "demo_repo" {
   name = "demo_repo"
 }
@@ -93,6 +101,14 @@ resource "aws_ecs_task_definition" "taskdefinition" {
     network_mode             = "awsvpc"
     execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
     task_role_arn            = aws_iam_role.demo_app_task_execution_role.arn
+    logConfiguration = {
+        logDriver = "awslogs",
+        options   = {
+          "awslogs-group"        = aws_cloudwatch_log_group.ecs_logs.name
+          "awslogs-region"       = var.region
+          "awslogs-stream-prefix" = "demo_container"
+        }
+      }
   }
 
 resource "aws_iam_role" "demo_app_task_execution_role" {
