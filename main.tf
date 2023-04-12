@@ -43,23 +43,6 @@ resource "aws_subnet" "demo_app-public-2" {
   availability_zone = "ap-south-1b"
 }
 
-resource "aws_cloudwatch_log_group" "ecs_logs" {
-  name = "ecs_logs"
-
-  tags = {
-    Name = "ecs_logs"
-  }
-}
-
-resource "aws_iam_policy_attachment" "ecs_logs_attachment" {
-  name       = "ecs_logs_attachment"
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-  entities = [
-    aws_cloudwatch_log_group.ecs_logs.arn
-  ]
-}
-
-
 resource "aws_cloudwatch_log_stream" "ecs_logs_demo_container" {
   name           = "demo_container"
   log_group_name = aws_cloudwatch_log_group.ecs_logs.name
@@ -106,14 +89,6 @@ resource "aws_ecs_task_definition" "taskdefinition" {
             hostPort      = 3000
           }
        ]
-       logConfiguration = {
-        logDriver = "awslogs",
-        options   = {
-          "awslogs-group"        = "aws_cloudwatch_log_group.ecs_logs.name"
-          "awslogs-region"       = "ap-south-1"
-          "awslogs-stream-prefix" = "demo_container"
-        }
-      }
     requires_compatibilities = ["FARGATE"]  
     cpu                      = "1024"
     memory                   = "3072"
@@ -136,17 +111,9 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
                 Service: "ecs-tasks.amazonaws.com"
             },
             Action: "sts:AssumeRole"
-        },
-        {
-            Effect: "Allow",
-            Principal: {
-                Service: "events.amazonaws.com"
-            },
-            Action: "sts:AssumeRole"
         }
     ]
-})
-  
+  })  
   inline_policy {
     name = "ecs-task-permissions"
     policy = jsonencode({
@@ -165,27 +132,3 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
     })
   }
 }
-
-resource "aws_iam_policy" "cloudwatch_full_access" {
-  name        = "cloudwatch_full_access"
-  description = "Provides full access to CloudWatch"
-
-  policy = jsonencode({
-    Version: "2012-10-17",
-    Statement: [
-      {
-        Effect: "Allow",
-        Action: [
-          "logs:*"
-        ],
-        Resource: "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "cloudwatch_full_access_attachment" {
-  policy_arn = "aws_iam_policy.cloudwatch_full_access.arn"
-  role       = "demo_app-task-execution-role"
-}
-
