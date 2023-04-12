@@ -170,6 +170,6 @@ resource "aws_iam_policy" "cloudwatch_full_access" {
 
 resource "aws_iam_role_policy_attachment" "cloudwatch_full_access_attachment" {
   policy_arn = "aws_iam_policy.cloudwatch_full_access.arn"
-  role       = "aws_iam_role.demo_app_task_execution_role.name"
+  role       = "demo_app-task-execution-role"
 }
 
