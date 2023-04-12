@@ -95,7 +95,7 @@ resource "aws_ecs_task_definition" "taskdefinition" {
             containerPort = 3000
             hostPort      = 3000
           }
-       ],
+       ]
        logConfiguration = {
         logDriver = "awslogs",
         options   = {
