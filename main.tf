@@ -110,7 +110,7 @@ resource "aws_ecs_task_definition" "taskdefinition" {
         logDriver = "awslogs",
         options   = {
           "awslogs-group"        = aws_cloudwatch_log_group.ecs_logs.name
-          "awslogs-region"       = var.region
+          "awslogs-region"       = ap-south-1
           "awslogs-stream-prefix" = "demo_container"
         }
       }
