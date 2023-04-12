@@ -83,6 +83,7 @@ resource "aws_ecs_service" "service" {
 }
 
 resource "aws_ecs_task_definition" "taskdefinition" {
+    family                = "demo_container"
     container_definitions = jsonencode([
       {
         name         = "demo_container"
@@ -104,7 +105,6 @@ resource "aws_ecs_task_definition" "taskdefinition" {
           "awslogs-stream-prefix" = "demo_container"
         }
       }
-    family                   = "demo_container"
     requires_compatibilities = ["FARGATE"]  
     cpu                      = "1024"
     memory                   = "3072"
