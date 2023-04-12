@@ -49,11 +49,16 @@ resource "aws_cloudwatch_log_group" "ecs_logs" {
   tags = {
     Name = "ecs_logs"
   }
-
-  iam_policy_attachment {
-    policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-  }
 }
+
+resource "aws_iam_policy_attachment" "ecs_logs_attachment" {
+  name       = "ecs_logs_attachment"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+  entities = [
+    aws_cloudwatch_log_group.ecs_logs.arn
+  ]
+}
+
 
 resource "aws_cloudwatch_log_stream" "ecs_logs_demo_container" {
   name           = "demo_container"
