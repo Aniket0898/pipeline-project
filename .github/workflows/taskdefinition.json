@@ -16,21 +16,21 @@
         "essential": true,
         "environment": [],
         "mountPoints": [],
-        "volumesFrom": []
+        "volumesFrom": [],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": aws_cloudwatch_log_group.ecs_logs.name,
+                "awslogs-region": var.region,
+                "awslogs-stream-prefix": "demo_container"
+            }
+        }
       }
     ],
     "family": "demo_container",
     "taskRoleArn": "arn:aws:iam::***:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::***:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    logConfiguration = {
-        logDriver = "awslogs",
-        options   = {
-          "awslogs-group"        = aws_cloudwatch_log_group.ecs_logs.name
-          "awslogs-region"       = var.region
-          "awslogs-stream-prefix" = "demo_container"
-        }
-      }
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -61,5 +61,4 @@
     "cpu": "1024",
     "memory": "3072",
     "registeredBy": "arn:aws:iam::***:user/Demo-User"
-  }
-  
+}
