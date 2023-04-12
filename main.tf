@@ -95,18 +95,8 @@ resource "aws_ecs_task_definition" "taskdefinition" {
             containerPort = 3000
             hostPort      = 3000
           }
-        ]
-      }
-    ])
-    family                   = "demo_container"
-    requires_compatibilities = ["FARGATE"]
-  
-    cpu                      = "1024"
-    memory                   = "3072"
-    network_mode             = "awsvpc"
-    execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
-    task_role_arn            = aws_iam_role.demo_app_task_execution_role.arn
-    logConfiguration = {
+       ],
+       logConfiguration = {
         logDriver = "awslogs",
         options   = {
           "awslogs-group"        = aws_cloudwatch_log_group.ecs_logs.name
@@ -114,6 +104,15 @@ resource "aws_ecs_task_definition" "taskdefinition" {
           "awslogs-stream-prefix" = "demo_container"
         }
       }
+    ])
+    family                   = "demo_container"
+    requires_compatibilities = ["FARGATE"]  
+    cpu                      = "1024"
+    memory                   = "3072"
+    network_mode             = "awsvpc"
+    execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
+    task_role_arn            = aws_iam_role.demo_app_task_execution_role.arn
+    }
   }
 
 resource "aws_iam_role" "demo_app_task_execution_role" {
