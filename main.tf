@@ -20,7 +20,7 @@ resource "aws_security_group" "demo_app" {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/8"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -79,8 +79,8 @@ resource "aws_ecs_task_definition" "taskdefinition" {
         essential    = true
         portMappings = [
           {
-            containerPort = 80
-            hostPort      = 80
+            containerPort = 3000
+            hostPort      = 3000
           }
         ]
       }
