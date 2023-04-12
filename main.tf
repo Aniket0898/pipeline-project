@@ -45,14 +45,14 @@ resource "aws_subnet" "demo_app-public-2" {
 
 resource "aws_cloudwatch_log_group" "ecs_logs" {
   name = "ecs_logs"
-  
+
   tags = {
     Name = "ecs_logs"
   }
 
-  policy_arns = [
-    "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-  ]
+  iam_policy_attachment {
+    policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+  }
 }
 
 resource "aws_cloudwatch_log_stream" "ecs_logs_demo_container" {
