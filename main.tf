@@ -43,11 +43,6 @@ resource "aws_subnet" "demo_app-public-2" {
   availability_zone = "ap-south-1b"
 }
 
-resource "aws_cloudwatch_log_stream" "ecs_logs_demo_container" {
-  name           = "demo_container"
-  log_group_name = aws_cloudwatch_log_group.ecs_logs.name
-}
-
 resource "aws_ecr_repository" "demo_repo" {
   name = "demo_repo"
 }
