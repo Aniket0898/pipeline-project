@@ -70,48 +70,6 @@ resource "aws_ecs_service" "service" {
 }
 
 resource "aws_ecs_task_definition" "taskdefinition" {
-    family                = "demo_container"
-    container_definitions = jsonencode([
-      {
-        name         = "demo_container"
-        image        = "622696765016.dkr.ecr.ap-south-1.amazonaws.com/demo_repo"
-        cpu          = 1024
-        memory       = 3072
-        essential    = true
-        portMappings = [
-          {
-            containerPort = 3000
-            hostPort      = 3000
-          }
-       ]
-    requires_compatibilities = ["FARGATE"]  
-    cpu                      = "1024"
-    memory                   = "3072"
-    network_mode             = "awsvpc"
-    execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
-    task_role_arn            = aws_iam_role.demo_app_task_execution_role.arn   
-    }
-   ])
-  }
-
-resource "aws_iam_role" "demo_app_task_execution_role" {
-  name = "demo_app-task-execution-role"
-
-  assume_role_policy = jsonencode({
-    Version: "2012-10-17",
-    Statement: [
-        {
-            Effect: "Allow",
-            Principal: {
-                Service: "ecs-tasks.amazonaws.com"
-            },
-            Action: "sts:AssumeRole"
-        }
-    ]
-  })  
-  inline_policy {
-    name = "ecs-task-permissions"
-    policy = jsonencode({resource "aws_ecs_task_definition" "taskdefinition" {
   family                   = "demo_task"
   container_definitions    = jsonencode([
     {
@@ -135,6 +93,24 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
   task_role_arn            = aws_iam_role.demo_app_task_execution_role.arn   
 }
 
+resource "aws_iam_role" "demo_app_task_execution_role" {
+  name = "demo_app-task-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version: "2012-10-17",
+    Statement: [
+        {
+            Effect: "Allow",
+            Principal: {
+                Service: "ecs-tasks.amazonaws.com"
+            },
+            Action: "sts:AssumeRole"
+        }
+    ]
+  })  
+  inline_policy {
+    name = "ecs-task-permissions"
+    policy = jsonencode({
       Version = "2012-10-17",
       Statement = [
         {
@@ -150,3 +126,4 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
     })
   }
 }
+
