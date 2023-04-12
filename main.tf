@@ -111,7 +111,30 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
   })  
   inline_policy {
     name = "ecs-task-permissions"
-    policy = jsonencode({
+    policy = jsonencode({resource "aws_ecs_task_definition" "taskdefinition" {
+  family                   = "demo_task"
+  container_definitions    = jsonencode([
+    {
+      name         = "demo_container"
+      image        = "***.dkr.ecr.***.amazonaws.com/demo_repo"
+      cpu          = 1024
+      memory       = 3072
+      essential    = true
+      portMappings = [
+        {
+          containerPort = 3000
+          hostPort      = 3000
+        }
+      ]
+    }
+  ])
+  requires_compatibilities = ["FARGATE"]  
+  memory                   = "3072"
+  network_mode             = "awsvpc"
+  execution_role_arn       = aws_iam_role.demo_app_task_execution_role.arn
+  task_role_arn            = aws_iam_role.demo_app_task_execution_role.arn   
+}
+
       Version = "2012-10-17",
       Statement = [
         {
