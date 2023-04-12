@@ -149,3 +149,27 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
     })
   }
 }
+
+resource "aws_iam_policy" "cloudwatch_full_access" {
+  name        = "cloudwatch_full_access"
+  description = "Provides full access to CloudWatch"
+
+  policy = jsonencode({
+    Version: "2012-10-17",
+    Statement: [
+      {
+        Effect: "Allow",
+        Action: [
+          "logs:*"
+        ],
+        Resource: "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_full_access_attachment" {
+  policy_arn = "aws_iam_policy.cloudwatch_full_access.arn"
+  role       = "aws_iam_role.demo_app_task_execution_role.name"
+}
+
