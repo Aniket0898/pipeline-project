@@ -140,7 +140,8 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
           Effect = "Allow",
           Action = [
             "ecr:*",
-            "ecs:*"
+            "ecs:*",
+            "cloudwatch:*"
           ],
           Resource = "*"
         }
