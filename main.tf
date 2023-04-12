@@ -56,11 +56,6 @@ resource "aws_cloudwatch_log_stream" "ecs_logs_demo_container" {
   log_group_name = aws_cloudwatch_log_group.ecs_logs.name
 }
 
-  tags = {
-    Name = "ecs_logs"
-  }
-} 
-
 resource "aws_ecr_repository" "demo_repo" {
   name = "demo_repo"
 }
