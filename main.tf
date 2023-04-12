@@ -119,18 +119,25 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
   name = "demo_app-task-execution-role"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect    = "Allow"
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
+    Version: "2012-10-17",
+    Statement: [
+        {
+            Effect: "Allow",
+            Principal: {
+                Service: "ecs-tasks.amazonaws.com"
+            },
+            Action: "sts:AssumeRole"
+        },
+        {
+            Effect: "Allow",
+            Principal: {
+                Service: "events.amazonaws.com"
+            },
+            Action: "sts:AssumeRole"
         }
-        Action    = "sts:AssumeRole"
-      }
     ]
-  })
-
+})
+  
   inline_policy {
     name = "ecs-task-permissions"
     policy = jsonencode({
