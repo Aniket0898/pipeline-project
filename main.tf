@@ -4,45 +4,6 @@ provider "aws" {
   secret_key = "DAtijEOVADSqSARMJwHqx6DQdecQDG72gYWkaGD4"
 }
 
-resource "aws_vpc" "demo_app" {
-  cidr_block = "10.0.0.0/16"
-
-  tags = {
-    Name = "demo_app-vpc"
-  }
-}
-
-resource "aws_security_group" "demo_app" {
-  name_prefix = "demo_app"
-  vpc_id      = aws_vpc.demo_app.id
-
-  ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_subnet" "demo_app-public-1" {
-  vpc_id            = aws_vpc.demo_app.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-south-1a"
-}
-
-resource "aws_subnet" "demo_app-public-2" {
-  vpc_id            = aws_vpc.demo_app.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "ap-south-1b"
-}
-
 resource "aws_ecr_repository" "demo_repo" {
   name = "demo_repo"
 }
@@ -62,8 +23,7 @@ resource "aws_ecs_service" "service" {
   task_definition                    = aws_ecs_task_definition.taskdefinition.arn
   network_configuration {
     assign_public_ip = true
-    security_groups  = [aws_security_group.demo_app.id]
-    subnets          = [aws_subnet.demo_app-public-1.id, aws_subnet.demo_app-public-2.id]
+    subnets          = ["subnet-0df53af7aba1ca7b0", "subnet-0d9076e31da33798c", "subnet-048dc467d2005bd7c"]
   }
 }
 
@@ -125,4 +85,3 @@ resource "aws_iam_role" "demo_app_task_execution_role" {
     })
   }
 }
-
