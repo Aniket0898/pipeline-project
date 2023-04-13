@@ -74,7 +74,7 @@ resource "aws_ecs_task_definition" "taskdefinition" {
   container_definitions    = jsonencode([
     {
       name         = "demo_container"
-      image        = "***.dkr.ecr.ap-south-1.***.amazonaws.com/demo_repo"
+      image        = "622696765016.dkr.ecr.ap-south-1.***.amazonaws.com/demo_repo"
       cpu          = 1024
       memory       = 3072
       essential    = true
