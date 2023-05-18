@@ -1,7 +1,7 @@
 provider "aws" {
   region     = "ap-south-1"
-  access_key = "AKIAZB646SZMKJ35BV7L"
-  secret_key = "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"
+  access_key = ""
+  secret_key = ""
 }
 
 resource "aws_ecr_repository" "demo_repo" {
